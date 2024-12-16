@@ -4,6 +4,21 @@ begin
 end
 go
 
+--  target of this query from pi sql commander lite
+-- ==========
+--   SELECT efs.*, ef.*, efa.* 
+--   FROM
+--   (
+--   SELECT TOP 100 *
+--   FROM [HOB].[EventFrame].[EventFrame]
+--   ORDER BY StartTime DESC
+--   ) ef
+--   INNER JOIN [HOB].[EventFrame].[EventFrameAttribute] efa ON efa.EventFrameID = ef.ID
+--   INNER JOIN [HOB].[Data].[EventFrameSnapshot] efs ON efs.EventFrameAttributeID = efa.ID
+--   OPTION (FORCE ORDER, EMBED ERRORS)
+-- ==========
+-- opinion: get all as strings and do processing on target side, source side is sensitive and we don't have a clear idea of typing from the source
+
 create table dbo.eventframesnapshot_h
 (
   [efs_eventframeattributeid] varchar(100),
@@ -23,8 +38,8 @@ create table dbo.eventframesnapshot_h
   [ef_id] varchar(100),
   [ef_name] varchar(100),
   [ef_description] varchar(100),
-  [starttime] varchar(100),
-  [endtime] varchar(100),
+  [starttime] varchar(100), -- from ef table
+  [endtime] varchar(100), -- from ef table
   [ef_eventframetemplateid] varchar(100),
   [ef_primaryparentid] varchar(100),
   [ef_primaryparentreferencetypeid] varchar(100),
