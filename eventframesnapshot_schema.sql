@@ -5,11 +5,13 @@ end
 go
 
 --  target of this query from pi sql commander lite
+--  this query is HEAVY. pi sql commander lite will timeout if you try to execute this
+-- the idea is to use "historical_crawler_sp" to take advantage of starttime and endtime to "crawl" all the data from these tables/query
 -- ==========
 --   SELECT efs.*, ef.*, efa.* 
 --   FROM
 --   (
---   SELECT TOP 100 *
+--   SELECT TOP *
 --   FROM [HOB].[EventFrame].[EventFrame]
 --   ORDER BY StartTime DESC
 --   ) ef
