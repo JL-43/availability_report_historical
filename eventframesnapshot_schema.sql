@@ -1,4 +1,3 @@
--- Create target table mirroring source structure
 if object_id('dbo.eventframesnapshot_h', 'U') is not null
 begin
 	drop table dbo.eventframesnapshot_h;
@@ -66,12 +65,12 @@ create table dbo.eventframesnapshot_h
 );
 go
 
--- Create index on starttime for efficient querying
+-- index on starttime for efficient querying
 -- create nonclustered index IX_target_table_starttime 
 -- on dbo.eventframesnapshot_h(starttime);
 -- go
 
--- Create audit table for tracking operations
+-- audit table
 if object_id('dbo.data_migration_audit', 'U') is not null
 begin
     drop table dbo.data_migration_audit;
@@ -81,7 +80,7 @@ go
 create table dbo.data_migration_audit
 (
     audit_id int identity(1,1) primary key,
-    batch_id uniqueidentifier not null,      -- To group related operations
+    batch_id uniqueidentifier not null,
     source_database varchar(255) not null,
     source_table varchar(255) not null,
     target_database varchar(255) not null,
@@ -92,7 +91,7 @@ create table dbo.data_migration_audit
     rows_processed int null,
     execution_status varchar(50) not null,   -- 'Started', 'Completed', 'Failed'
     info_message varchar(max) null,
-    sql_command varchar(max) not null,       -- The actual SQL that was executed
+    sql_command varchar(max) not null,       -- sql that was executed
     start_time datetime not null default getdate(),
     end_time datetime null,
     created_by varchar(255) not null default system_user,
@@ -100,17 +99,17 @@ create table dbo.data_migration_audit
 );
 go
 
--- Create index on batch_id for efficient querying of related operations
+-- create index on batch_id for efficient querying of related operations
 create nonclustered index IX_data_migration_audit_batch_id 
 on dbo.data_migration_audit(batch_id);
 go
 
--- Create index on execution_status for monitoring failed operations
+-- create index on execution_status for monitoring failed operations
 create nonclustered index IX_data_migration_audit_status 
 on dbo.data_migration_audit(execution_status);
 go
 
--- Create a view for easy monitoring of latest migration status
+-- migration status view
 create or alter view dbo.vw_migration_status
 as
 select 
